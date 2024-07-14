@@ -1,19 +1,34 @@
 cmake_minimum_required(VERSION 3.15)
 
+find_package(Catch2 3 REQUIRED)
+
 #set(PROJECT_NAME "AwesomeProject")
 
 project(AwesomeProject VERSION 1.0)
 
 # Set C++ Version
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# source folder files to be compiled
+set(SRC_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/src")
+
+# tests folder files to be run
+set(TEST_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/test")
 
 # source files to be compiled
 file(GLOB_RECURSE SRC_FILES 
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp" 
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/**/*.cpp" 
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/**/*.c")
+    "${SRC_FOLDER}/*.cpp" 
+    "${SRC_FOLDER}/*.c"
+    "${SRC_FOLDER}/**/*.cpp" 
+    "${SRC_FOLDER}/**/*.c")
+    
+# tests files to be run
+file(GLOB_RECURSE TEST_FILES 
+"${TEST_FOLDER}/*.cpp" 
+"${TEST_FOLDER}/*.c"
+"${TEST_FOLDER}/**/*.cpp" 
+"${TEST_FOLDER}/**/*.c")
 
 # header files to be compiled
 set(INCLUDE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -67,3 +82,24 @@ set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRENT_
 
 # Set output directory
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+
+# These tests can use the Catch2-provided main
+add_executable(${PROJECT_NAME}Tests ${TEST_FILES} ${SRC_FILES} ${HEADER_FILES})
+# Include directories
+target_include_directories(${PROJECT_NAME}Tests PUBLIC ${INCLUDE_FILES} "src")
+# Include libraries
+target_link_libraries(${PROJECT_NAME}Tests PRIVATE Catch2::Catch2WithMain)
+# Set output directory
+set_target_properties(${PROJECT_NAME}Tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRENT_SOURCE_DIR}/bin/${PROJECT_NAME}Tests)
+
+add_custom_target(cppcheck	
+	COMMENT "Run CppCheck"
+	COMMAND cppcheck ${SRC_FOLDER} --enable=warning,style,performance,portability --force --std=c++20 2> ../bin/cppcheck.log
+)
+
+add_custom_target(test	
+    COMMAND make ${PROJECT_NAME}Tests
+	COMMENT "Run Tests"
+	COMMAND ../bin/${PROJECT_NAME}Tests
+)
