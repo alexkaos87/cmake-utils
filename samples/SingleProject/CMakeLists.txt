@@ -91,12 +91,6 @@ target_link_libraries(${PROJECT_NAME}Tests PRIVATE Catch2::Catch2WithMain)
 set_target_properties(${PROJECT_NAME}Tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRENT_SOURCE_DIR}/bin/${PROJECT_NAME}Tests)
 
-# adding custom target to execute CppCheck analysis on source files
-add_custom_target(static-check	
-	COMMENT "Run CppCheck"
-	COMMAND cppcheck ${SRC_FOLDER} --enable=warning,style,performance,portability --force --std=c++20 2> ${CMAKE_CURRENT_SOURCE_DIR}/bin/cppcheck.log
-)
-
 # adding custom tartget to execute tests 
 add_custom_target(run-test	
     COMMAND make ${PROJECT_NAME}Tests
@@ -104,23 +98,48 @@ add_custom_target(run-test
 	COMMAND ../bin/${PROJECT_NAME}Tests
 )
 
+######################## CPPCHECK SECTION ####################### 
+# Check Cppcheck
+find_program(CPPCHECK cppcheck)
+
+if(CPPCHECK)
+    # Definining cppcheck options
+    set(CMAKE_CXX_CPPCHECK 
+        ${CPPCHECK}
+        --std=c++20 # handle C++20 standard
+        --enable=warning,style,performance,portability
+        --force
+        --error-exitcode=1
+    )
+
+    # Aggiungi un target personalizzato per Cppcheck
+    add_custom_target(
+        static-check
+        COMMAND ${CMAKE_CXX_CPPCHECK}
+        ${SRC_FOLDER} 2> ${CMAKE_CURRENT_SOURCE_DIR}/bin/cppcheck.log
+        COMMENT "Running Cppcheck static analysis"
+    )
+else()
+    message(STATUS "Cppcheck not found, static analysis disabled")
+endif()
+################################################################# 
+
 ######################## DOXYGEN SECTION ######################## 
+################################################################# 
 # check Doxygen
 find_package(Doxygen)
 
 if(DOXYGEN_FOUND)
     # set doxygen file path
-    #set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
     set(DOXYFILE ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
 
-    # setup doxygen data Doxyfile.in -> Doxyfile
-    #configure_file(${DOXYFILE_IN} ${DOXYFILE} @ONLY)
-
     # adding custom tartget to generate doxygen documentation 
-    add_custom_target(run-doc
+    add_custom_target(
+        run-doc
         COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin
-        COMMENT "Generating API documentation with Doxygen")
+        COMMENT "Generating API documentation with Doxygen"
+    )
 else()
     message(STATUS "Doxygen not found, unable to generate documentation")
 endif()
