@@ -91,12 +91,22 @@ target_link_libraries(${PROJECT_NAME}Tests PRIVATE Catch2::Catch2WithMain)
 set_target_properties(${PROJECT_NAME}Tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRENT_SOURCE_DIR}/bin/${PROJECT_NAME}Tests)
 
-# adding custom tartget to execute tests 
-add_custom_target(run-test	
-    COMMAND make ${PROJECT_NAME}Tests
-	COMMENT "Run Tests"
-	COMMAND ../bin/${PROJECT_NAME}Tests
-)
+####################### UNIT TESTS SECTION ######################
+# Check Catch2
+find_package(Catch2 REQUIRED)
+
+if(Catch2_FOUND)
+    # adding custom tartget to execute tests 
+    add_custom_target(
+        run-test	
+        COMMAND make ${PROJECT_NAME}Tests
+        COMMAND ../bin/${PROJECT_NAME}Tests
+        COMMENT "Running Unit Tests"
+    )
+else()
+    message(STATUS "Catch2 not found, run unit tests disabled")
+endif()
+################################################################# 
 
 ######################## CPPCHECK SECTION ####################### 
 # Check Cppcheck
@@ -112,7 +122,7 @@ if(CPPCHECK)
         --error-exitcode=1
     )
 
-    # Aggiungi un target personalizzato per Cppcheck
+    # adding custom target to execute CppCheck analysis on source files
     add_custom_target(
         static-check
         COMMAND ${CMAKE_CXX_CPPCHECK}
