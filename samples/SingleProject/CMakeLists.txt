@@ -81,27 +81,34 @@ set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRENT_
 # Set output directory
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
-# These tests can use the Catch2-provided main
-add_executable(${PROJECT_NAME}Tests ${TEST_FILES} ${SRC_FILES} ${HEADER_FILES})
-# Include directories
-target_include_directories(${PROJECT_NAME}Tests PUBLIC ${INCLUDE_FILES} "src")
-# Include libraries
-target_link_libraries(${PROJECT_NAME}Tests PRIVATE Catch2::Catch2WithMain)
-# Set output directory
-set_target_properties(${PROJECT_NAME}Tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
-set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRENT_SOURCE_DIR}/bin/${PROJECT_NAME}Tests)
-
 ####################### UNIT TESTS SECTION ######################
 # Check Catch2
 find_package(Catch2 REQUIRED)
 
 if(Catch2_FOUND)
+    # These tests can use the Catch2-provided main
+    add_executable(${PROJECT_NAME}Tests ${TEST_FILES} ${SRC_FILES} ${HEADER_FILES})
+    # Include directories
+    target_include_directories(${PROJECT_NAME}Tests PUBLIC ${INCLUDE_FILES} "src")
+    # Include libraries
+    target_link_libraries(${PROJECT_NAME}Tests PRIVATE Catch2::Catch2WithMain)
+    # Set output directory
+    set_target_properties(${PROJECT_NAME}Tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+
     # adding custom tartget to execute tests 
     add_custom_target(
         run-test	
         COMMAND make ${PROJECT_NAME}Tests
         COMMAND ../bin/${PROJECT_NAME}Tests
         COMMENT "Running Unit Tests"
+    )
+    
+    # Set Doxygen cleaning files
+    set_property(
+        DIRECTORY
+        APPEND PROPERTY
+        ADDITIONAL_MAKE_CLEAN_FILES
+        ${CMAKE_CURRENT_SOURCE_DIR}/bin/${PROJECT_NAME}Tests
     )
 else()
     message(STATUS "Catch2 not found, run unit tests disabled")
@@ -122,12 +129,23 @@ if(CPPCHECK)
         --error-exitcode=1
     )
 
+    # Set output file with the results
+    set(CPPCHECK_OUTPUT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/bin/cppcheck.log)
+
     # adding custom target to execute CppCheck analysis on source files
     add_custom_target(
         static-check
         COMMAND ${CMAKE_CXX_CPPCHECK}
-        ${SRC_FOLDER} 2> ${CMAKE_CURRENT_SOURCE_DIR}/bin/cppcheck.log
+        ${SRC_FOLDER} 2> ${CPPCHECK_OUTPUT_FILE}
         COMMENT "Running Cppcheck static analysis"
+    )
+    
+    # Set Doxygen cleaning files
+    set_property(
+        DIRECTORY
+        APPEND PROPERTY
+        ADDITIONAL_MAKE_CLEAN_FILES
+        ${CPPCHECK_OUTPUT_FILE}
     )
 else()
     message(STATUS "Cppcheck not found, static analysis disabled")
@@ -135,22 +153,33 @@ endif()
 ################################################################# 
 
 ######################## DOXYGEN SECTION ######################## 
-################################################################# 
 # check Doxygen
 find_package(Doxygen)
 
 if(DOXYGEN_FOUND)
     # set doxygen file path
-    set(DOXYFILE ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
+    set(DOXYFILE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
+
+    # Set output directory for documentation
+    set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/bin/docs)
 
     # adding custom tartget to generate doxygen documentation 
     add_custom_target(
         run-doc
-        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${DOXYGEN_OUTPUT_DIR}
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_PATH}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Generating API documentation with Doxygen"
+    )
+    
+    # Set Doxygen cleaning files
+    set_property(
+        DIRECTORY
+        APPEND PROPERTY
+        ADDITIONAL_MAKE_CLEAN_FILES
+        ${DOXYGEN_OUTPUT_DIR}
     )
 else()
     message(STATUS "Doxygen not found, unable to generate documentation")
 endif()
-
+################################################################# 
