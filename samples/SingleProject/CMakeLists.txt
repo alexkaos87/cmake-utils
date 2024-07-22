@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.15)
 
 find_package(Catch2 3 REQUIRED)
 
-#set(PROJECT_NAME "AwesomeProject")
-
 project(AwesomeProject VERSION 1.0)
 
 # Set C++ Version
@@ -93,13 +91,37 @@ target_link_libraries(${PROJECT_NAME}Tests PRIVATE Catch2::Catch2WithMain)
 set_target_properties(${PROJECT_NAME}Tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRENT_SOURCE_DIR}/bin/${PROJECT_NAME}Tests)
 
-add_custom_target(cppcheck	
+# adding custom target to execute CppCheck analysis on source files
+add_custom_target(static-check	
 	COMMENT "Run CppCheck"
-	COMMAND cppcheck ${SRC_FOLDER} --enable=warning,style,performance,portability --force --std=c++20 2> ../bin/cppcheck.log
+	COMMAND cppcheck ${SRC_FOLDER} --enable=warning,style,performance,portability --force --std=c++20 2> ${CMAKE_CURRENT_SOURCE_DIR}/bin/cppcheck.log
 )
 
-add_custom_target(test	
+# adding custom tartget to execute tests 
+add_custom_target(run-test	
     COMMAND make ${PROJECT_NAME}Tests
 	COMMENT "Run Tests"
 	COMMAND ../bin/${PROJECT_NAME}Tests
 )
+
+######################## DOXYGEN SECTION ######################## 
+# check Doxygen
+find_package(Doxygen)
+
+if(DOXYGEN_FOUND)
+    # set doxygen file path
+    #set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
+    set(DOXYFILE ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
+
+    # setup doxygen data Doxyfile.in -> Doxyfile
+    #configure_file(${DOXYFILE_IN} ${DOXYFILE} @ONLY)
+
+    # adding custom tartget to generate doxygen documentation 
+    add_custom_target(run-doc
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin
+        COMMENT "Generating API documentation with Doxygen")
+else()
+    message(STATUS "Doxygen not found, unable to generate documentation")
+endif()
+

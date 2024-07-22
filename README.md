@@ -6,6 +6,7 @@ This repository is collecting cmake utilities files.
 - build-essential
 - cppcheck
 - catch2
+- doxygen, graphviz
 
 ## Instructions
 In general, if you want to compile a program using _cmake_, you must do the following steps:
@@ -17,5 +18,6 @@ In general, if you want to compile a program using _cmake_, you must do the foll
 ## Commands
 - `make` will compile project(s) and tests and put output on bin folder
 - `make clean` will clean project(s) and tests from bin folder
-- `make cppcheck` will run cppcheck on src folder and log output on bin folder
-- `make test` will compile and run tests
+- `make static-check` will run cppcheck on src folder and log output on bin folder
+- `make run-test` will compile and run tests
+- `make run-doc` will generate doxygen documentation on bin folder
