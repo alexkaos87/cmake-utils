@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(SRC_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 # tests folder files to be run
-set(TEST_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/test")
+set(TEST_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/test_catch2")
 
 # source files to be compiled
 file(GLOB_RECURSE SRC_FILES 
