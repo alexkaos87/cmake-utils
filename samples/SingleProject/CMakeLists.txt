@@ -12,7 +12,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(SRC_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 # tests folder files to be run
-set(TEST_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/test_catch2")
+set(TEST_CATCH2_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/test_catch2")
+set(TEST_GTEST_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/test_gtest")
 
 # source files to be compiled
 file(GLOB_RECURSE SRC_FILES 
@@ -22,11 +23,17 @@ file(GLOB_RECURSE SRC_FILES
     "${SRC_FOLDER}/**/*.c")
     
 # tests files to be run
-file(GLOB_RECURSE TEST_FILES 
-"${TEST_FOLDER}/*.cpp" 
-"${TEST_FOLDER}/*.c"
-"${TEST_FOLDER}/**/*.cpp" 
-"${TEST_FOLDER}/**/*.c")
+file(GLOB_RECURSE TEST_CATCH2_FILES 
+"${TEST_CATCH2_FOLDER}/*.cpp" 
+"${TEST_CATCH2_FOLDER}/*.c"
+"${TEST_CATCH2_FOLDER}/**/*.cpp" 
+"${TEST_CATCH2_FOLDER}/**/*.c")
+
+file(GLOB_RECURSE TEST_GTEST_FILES 
+"${TEST_GTEST_FOLDER}/*.cpp" 
+"${TEST_GTEST_FOLDER}/*.c"
+"${TEST_GTEST_FOLDER}/**/*.cpp" 
+"${TEST_GTEST_FOLDER}/**/*.c")
 
 # header files to be compiled
 set(INCLUDE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -87,19 +94,19 @@ find_package(Catch2 REQUIRED)
 
 if(Catch2_FOUND)
     # These tests can use the Catch2-provided main
-    add_executable(${PROJECT_NAME}Tests ${TEST_FILES} ${SRC_FILES} ${HEADER_FILES})
+    add_executable(${PROJECT_NAME}Catch2Tests ${TEST_CATCH2_FILES} ${SRC_FILES} ${HEADER_FILES})
     # Include directories
-    target_include_directories(${PROJECT_NAME}Tests PUBLIC ${INCLUDE_FILES} "src")
+    target_include_directories(${PROJECT_NAME}Catch2Tests PUBLIC ${INCLUDE_FILES} "src")
     # Include libraries
-    target_link_libraries(${PROJECT_NAME}Tests PRIVATE Catch2::Catch2WithMain)
+    target_link_libraries(${PROJECT_NAME}Catch2Tests PRIVATE Catch2::Catch2WithMain)
     # Set output directory
-    set_target_properties(${PROJECT_NAME}Tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+    set_target_properties(${PROJECT_NAME}Catch2Tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
     # adding custom tartget to execute tests 
     add_custom_target(
-        run-test	
-        COMMAND make ${PROJECT_NAME}Tests
-        COMMAND ../bin/${PROJECT_NAME}Tests
+        run-test-catch2	
+        COMMAND make ${PROJECT_NAME}Catch2Tests
+        COMMAND ../bin/${PROJECT_NAME}Catch2Tests
         COMMENT "Running Unit Tests"
     )
     
@@ -108,10 +115,42 @@ if(Catch2_FOUND)
         DIRECTORY
         APPEND PROPERTY
         ADDITIONAL_MAKE_CLEAN_FILES
-        ${CMAKE_CURRENT_SOURCE_DIR}/bin/${PROJECT_NAME}Tests
+        ${CMAKE_CURRENT_SOURCE_DIR}/bin/${PROJECT_NAME}Catch2Tests
     )
 else()
     message(STATUS "Catch2 not found, run unit tests disabled")
+endif()
+
+# Check gtest
+find_package(GTest REQUIRED)
+
+if(GTest_FOUND)
+    # These tests can use the gtest-provided main
+    add_executable(${PROJECT_NAME}GtestTests ${TEST_GTEST_FILES} ${SRC_FILES} ${HEADER_FILES})
+    # Include directories
+    target_include_directories(${PROJECT_NAME}GtestTests PUBLIC ${INCLUDE_FILES} "src")
+    # Include libraries
+    target_link_libraries(${PROJECT_NAME}GtestTests PRIVATE GTest::gtest_main)
+    # Set output directory
+    set_target_properties(${PROJECT_NAME}GtestTests PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+
+    # adding custom tartget to execute tests 
+    add_custom_target(
+        run-test-gtest
+        COMMAND make ${PROJECT_NAME}GtestTests
+        COMMAND ../bin/${PROJECT_NAME}GtestTests
+        COMMENT "Running Unit Tests"
+    )
+    
+    # Set Doxygen cleaning files
+    set_property(
+        DIRECTORY
+        APPEND PROPERTY
+        ADDITIONAL_MAKE_CLEAN_FILES
+        ${CMAKE_CURRENT_SOURCE_DIR}/bin/${PROJECT_NAME}GtestTests
+    )
+else()
+    message(STATUS "gtest not found, run unit tests disabled")
 endif()
 ################################################################# 
 
