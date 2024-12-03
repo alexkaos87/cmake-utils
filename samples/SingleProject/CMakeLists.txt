@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
 
-find_package(Catch2 3 REQUIRED)
-
 project(AwesomeProject VERSION 1.0)
 
 # Set C++ Version
@@ -11,10 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # source folder files to be compiled
 set(SRC_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
-# tests folder files to be run
-set(TEST_CATCH2_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/test_catch2")
-set(TEST_GTEST_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/test_gtest")
-
 # source files to be compiled
 file(GLOB_RECURSE SRC_FILES 
     "${SRC_FOLDER}/*.cpp" 
@@ -22,19 +16,6 @@ file(GLOB_RECURSE SRC_FILES
     "${SRC_FOLDER}/**/*.cpp" 
     "${SRC_FOLDER}/**/*.c")
     
-# tests files to be run
-file(GLOB_RECURSE TEST_CATCH2_FILES 
-"${TEST_CATCH2_FOLDER}/*.cpp" 
-"${TEST_CATCH2_FOLDER}/*.c"
-"${TEST_CATCH2_FOLDER}/**/*.cpp" 
-"${TEST_CATCH2_FOLDER}/**/*.c")
-
-file(GLOB_RECURSE TEST_GTEST_FILES 
-"${TEST_GTEST_FOLDER}/*.cpp" 
-"${TEST_GTEST_FOLDER}/*.c"
-"${TEST_GTEST_FOLDER}/**/*.cpp" 
-"${TEST_GTEST_FOLDER}/**/*.c")
-
 # header files to be compiled
 set(INCLUDE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
@@ -88,71 +69,8 @@ set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRENT_
 # Set output directory
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
-####################### UNIT TESTS SECTION ######################
-# Check Catch2
-find_package(Catch2 REQUIRED)
-
-if(Catch2_FOUND)
-    # These tests can use the Catch2-provided main
-    add_executable(${PROJECT_NAME}Catch2Tests ${TEST_CATCH2_FILES} ${SRC_FILES} ${HEADER_FILES})
-    # Include directories
-    target_include_directories(${PROJECT_NAME}Catch2Tests PUBLIC ${INCLUDE_FILES} "src")
-    # Include libraries
-    target_link_libraries(${PROJECT_NAME}Catch2Tests PRIVATE Catch2::Catch2WithMain)
-    # Set output directory
-    set_target_properties(${PROJECT_NAME}Catch2Tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
-
-    # adding custom tartget to execute tests 
-    add_custom_target(
-        run-test-catch2	
-        COMMAND make ${PROJECT_NAME}Catch2Tests
-        COMMAND ../bin/${PROJECT_NAME}Catch2Tests
-        COMMENT "Running Unit Tests"
-    )
-    
-    # Set Doxygen cleaning files
-    set_property(
-        DIRECTORY
-        APPEND PROPERTY
-        ADDITIONAL_MAKE_CLEAN_FILES
-        ${CMAKE_CURRENT_SOURCE_DIR}/bin/${PROJECT_NAME}Catch2Tests
-    )
-else()
-    message(STATUS "Catch2 not found, run unit tests disabled")
-endif()
-
-# Check gtest
-find_package(GTest REQUIRED)
-
-if(GTest_FOUND)
-    # These tests can use the gtest-provided main
-    add_executable(${PROJECT_NAME}GtestTests ${TEST_GTEST_FILES} ${SRC_FILES} ${HEADER_FILES})
-    # Include directories
-    target_include_directories(${PROJECT_NAME}GtestTests PUBLIC ${INCLUDE_FILES} "src")
-    # Include libraries
-    target_link_libraries(${PROJECT_NAME}GtestTests PRIVATE GTest::gtest_main)
-    # Set output directory
-    set_target_properties(${PROJECT_NAME}GtestTests PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
-
-    # adding custom tartget to execute tests 
-    add_custom_target(
-        run-test-gtest
-        COMMAND make ${PROJECT_NAME}GtestTests
-        COMMAND ../bin/${PROJECT_NAME}GtestTests
-        COMMENT "Running Unit Tests"
-    )
-    
-    # Set Doxygen cleaning files
-    set_property(
-        DIRECTORY
-        APPEND PROPERTY
-        ADDITIONAL_MAKE_CLEAN_FILES
-        ${CMAKE_CURRENT_SOURCE_DIR}/bin/${PROJECT_NAME}GtestTests
-    )
-else()
-    message(STATUS "gtest not found, run unit tests disabled")
-endif()
-################################################################# 
+add_subdirectory(test_catch2)
+add_subdirectory(test_gtest)
 
 ######################## CPPCHECK SECTION ####################### 
 # Check Cppcheck
