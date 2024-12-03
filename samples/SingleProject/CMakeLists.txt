@@ -69,6 +69,7 @@ set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRENT_
 # Set output directory
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
+add_subdirectory(test_boost)
 add_subdirectory(test_catch2)
 add_subdirectory(test_gtest)
 
