@@ -33,7 +33,7 @@ if(GTest_FOUND)
     # Include directories
     target_include_directories(${PROJECT_NAME}GtestTests PUBLIC ${INCLUDE_FILES} "../src")
     # Include libraries
-    target_link_libraries(${PROJECT_NAME}GtestTests PRIVATE GTest::gtest_main)
+    target_link_libraries(${PROJECT_NAME}GtestTests PRIVATE gtest gmock GTest::gtest_main)
     # Set output directory
     set_target_properties(${PROJECT_NAME}GtestTests PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../bin")
 
@@ -45,7 +45,7 @@ if(GTest_FOUND)
         COMMENT "Running gtest Unit Tests"
     )
     
-    # Set Doxygen cleaning files
+    # Set gtest tests cleaning files
     set_property(
         DIRECTORY
         APPEND PROPERTY

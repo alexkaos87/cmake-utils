@@ -45,7 +45,7 @@ if(Boost_FOUND)
         COMMENT "Running Boost Unit Tests"
     )
     
-    # Set Doxygen cleaning files
+    # Set boost tests cleaning files
     set_property(
         DIRECTORY
         APPEND PROPERTY

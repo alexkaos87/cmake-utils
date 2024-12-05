@@ -45,7 +45,7 @@ if(Catch2_FOUND)
         COMMENT "Running catch2 Unit Tests"
     )
     
-    # Set Doxygen cleaning files
+    # Set catch2 tests cleaning files
     set_property(
         DIRECTORY
         APPEND PROPERTY

@@ -6,7 +6,7 @@ This repository is collecting cmake utilities files.
 - build-essential
 - cppcheck
 - catch2
-- libgtest-dev
+- libgtest-dev, libgmock-dev
 - libboost-all-dev
 - doxygen, graphviz
 
