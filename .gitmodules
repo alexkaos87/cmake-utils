@@ -1,0 +1,3 @@
+[submodule "samples/SingleProject/test_boost/turtle"]
+	path = samples/SingleProject/test_boost/turtle
+	url = https://github.com/mat007/turtle.git

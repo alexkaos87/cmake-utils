@@ -20,8 +20,18 @@ file(GLOB_RECURSE TEST_FILES
 "${TEST_FOLDER}/**/*.cpp" 
 "${TEST_FOLDER}/**/*.c")
 
+# Exclude files in the turtle folder
+set(EXCLUDED_FOLDER "${TEST_FOLDER}/turtle")
+
+# Filter the files
+foreach(FILE ${TEST_FILES})
+    if(${FILE} MATCHES ${EXCLUDED_FOLDER})
+        list(REMOVE_ITEM TEST_FILES ${FILE})
+    endif()
+endforeach()
+
 # header files to be compiled
-set(INCLUDE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+set(INCLUDE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/../include" "${TEST_FOLDER}/turtle/include")
 
 ####################### UNIT TESTS SECTION ######################
 # Check Boost 
