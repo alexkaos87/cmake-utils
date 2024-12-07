@@ -1,12 +1,11 @@
 #pragma once
-#include <gtest/gtest.h>
 #include <memory>
 #include "Car.h"
 #include "EngineMock.h"
 
-class CarFixture : public ::testing::Test
+class CarFixture
 {
-protected:
+public:
     CarFixture() : pEngineMock()
     {
         auto pEngine = std::make_unique<EngineMock>();

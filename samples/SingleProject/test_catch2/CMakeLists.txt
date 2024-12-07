@@ -28,12 +28,14 @@ set(INCLUDE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 find_package(Catch2 REQUIRED)
 
 if(Catch2_FOUND)
+    find_package(GTest REQUIRED)
+    
     # These tests can use the Catch2-provided main
     add_executable(${PROJECT_NAME}Catch2Tests ${TEST_FILES} ${SRC_FILES} ${HEADER_FILES})
     # Include directories
     target_include_directories(${PROJECT_NAME}Catch2Tests PUBLIC ${INCLUDE_FILES} "../src")
     # Include libraries
-    target_link_libraries(${PROJECT_NAME}Catch2Tests PRIVATE Catch2::Catch2WithMain)
+    target_link_libraries(${PROJECT_NAME}Catch2Tests PRIVATE Catch2::Catch2WithMain gtest gmock GTest::gtest_main)
     # Set output directory
     set_target_properties(${PROJECT_NAME}Catch2Tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../bin")
 
