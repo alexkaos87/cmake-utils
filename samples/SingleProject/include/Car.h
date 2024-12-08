@@ -6,7 +6,7 @@ class IEngine;
 class Car
 {
 public:
-    Car(std::unique_ptr<IEngine> pEngine);
+    explicit Car(std::unique_ptr<IEngine> pEngine);
 
     bool Start() const;
 

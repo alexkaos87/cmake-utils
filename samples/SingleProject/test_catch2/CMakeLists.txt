@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.20)
 
 # source folder files to be compiled
 set(SRC_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/../src")
@@ -41,7 +41,7 @@ if(Catch2_FOUND)
 
     # adding custom tartget to execute tests 
     add_custom_target(
-        run-test-catch2	
+        test-catch2	
         COMMAND make ${PROJECT_NAME}Catch2Tests
         COMMAND ../../bin/${PROJECT_NAME}Catch2Tests
         COMMENT "Running catch2 Unit Tests"

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.20)
 
 # source folder files to be compiled
 set(SRC_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/../src")
@@ -49,7 +49,7 @@ if(Boost_FOUND)
 
     # adding custom tartget to execute tests 
     add_custom_target(
-        run-test-boost
+        test-boost
         COMMAND make ${PROJECT_NAME}BoostTests
         COMMAND ../../bin/${PROJECT_NAME}BoostTests
         COMMENT "Running Boost Unit Tests"

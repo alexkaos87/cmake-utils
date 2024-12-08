@@ -1,9 +1,14 @@
-cmake_minimum_required(VERSION 3.15)
-
-project(AwesomeProject VERSION 1.0)
+cmake_minimum_required(VERSION 3.20)
 
 # Set C++ Version
 set(CMAKE_CXX_STANDARD 20)
+
+# Set the project name and language
+project(AwesomeProject 
+    VERSION 1.0 
+    DESCRIPTION ""
+    LANGUAGES CXX C)
+
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # source folder files to be compiled
@@ -69,9 +74,31 @@ set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRENT_
 # Set output directory
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
+######################### BUILD SECTION ####àà################### 
+add_custom_target(
+    build
+    COMMAND make -j
+    COMMENT "Compiling source files"
+)
+
+add_custom_target(
+    rebuild
+    COMMAND make clean build
+    COMMENT "Compiling source files from clean state"
+)
+################################################################# 
+
+######################### TESTS SECTION ####àà################### 
 add_subdirectory(test_boost)
 add_subdirectory(test_catch2)
 add_subdirectory(test_gtest)
+
+add_custom_target(
+    test
+    COMMAND make test-boost test-catch2 test-gtest
+    COMMENT "Running whole tests suites"
+)
+################################################################# 
 
 ######################## CPPCHECK SECTION ####################### 
 # Check Cppcheck
@@ -81,6 +108,7 @@ if(CPPCHECK)
     # Definining cppcheck options
     set(CMAKE_CXX_CPPCHECK 
         ${CPPCHECK}
+        --language=c++
         --std=c++20 # handle C++20 standard
         --enable=warning,style,performance,portability
         --force
@@ -123,7 +151,7 @@ if(DOXYGEN_FOUND)
 
     # adding custom tartget to generate doxygen documentation 
     add_custom_target(
-        run-doc
+        doc
         COMMAND ${CMAKE_COMMAND} -E make_directory ${DOXYGEN_OUTPUT_DIR}
         COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_PATH}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
