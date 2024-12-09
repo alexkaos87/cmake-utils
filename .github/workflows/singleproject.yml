@@ -37,12 +37,52 @@ jobs:
           cd samples/SingleProject/build
           cmake ..        
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Run build command
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          cd samples/SingleProject/build
+          make build
+
+      - name: Run rebuild command
+        run: |
+          cd samples/SingleProject/build
+          make rebuild
+          
+      - name: Run clean command
+        run: |
+          cd samples/SingleProject/build
+          make clean
+          
+      - name: Run cppcheck command
+        run: |
+          cd samples/SingleProject/build
+          make static-check
+          
+      - name: Run doxygen command
+        run: |
+          cd samples/SingleProject/build
+          make doc
+          
+      - name: Run boost tests command
+        run: |
+          cd samples/SingleProject/build
+          make clean
+          make test-boost
+          
+      - name: Run catch2 tests command
+        run: |
+          cd samples/SingleProject/build
+          make clean
+          make test-catch2
+          
+      - name: Run gtest tests command
+        run: |
+          cd samples/SingleProject/build
+          make clean
+          make test-gtest
+          
+      - name: Run whole tests command
+        run: |
+          cd samples/SingleProject/build
+          make clean
+          make test
+          
