@@ -24,6 +24,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
+        with:
+          submodules: true      # Inizializza i submodule
+          fetch-depth: 1        # Limita il fetch alla singola revisione necessaria
 
       # Install all dependencies needed for Single Project
       - name: Install dependencies
