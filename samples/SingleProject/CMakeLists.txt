@@ -77,7 +77,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMA
 ######################### BUILD SECTION ####àà################### 
 add_custom_target(
     build
-    COMMAND make -j
+    COMMAND make -j ${PROJECT_NAME}
     COMMENT "Compiling source files"
 )
 
