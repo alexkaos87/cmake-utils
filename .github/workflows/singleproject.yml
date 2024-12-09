@@ -43,7 +43,7 @@ jobs:
         uses: actions/upload-artifact@v4.4.3
         with:
           name: bin
-          path: samples/SingleProject/build/bin
+          path: samples/SingleProject/bin
 
       - name: Run rebuild command
         run: |
@@ -75,7 +75,7 @@ jobs:
         uses: actions/upload-artifact@v4.4.3
         with:
           name: doc
-          path: samples/SingleProject/build/doc
+          path: samples/SingleProject/doc
           
       - name: Run boost tests command
         run: |
@@ -87,7 +87,7 @@ jobs:
         uses: actions/upload-artifact@v4.4.3
         with:
           name: test-boost
-          path: samples/SingleProject/build/bin
+          path: samples/SingleProject/bin
           
       - name: Run catch2 tests command
         run: |
@@ -99,7 +99,7 @@ jobs:
         uses: actions/upload-artifact@v4.4.3
         with:
           name: test-catch2
-          path: samples/SingleProject/build/bin
+          path: samples/SingleProject/bin
           
       - name: Run gtest tests command
         run: |
@@ -111,7 +111,7 @@ jobs:
         uses: actions/upload-artifact@v4.4.3
         with:
           name: test-gtest
-          path: samples/SingleProject/build/bin
+          path: samples/SingleProject/bin
           
       - name: Run whole tests command
         run: |
