@@ -31,6 +31,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y cmake build-essential cppcheck catch2 libgtest-dev libgmock-dev libboost-all-dev doxygen graphviz
 
+      - name: Prepare build folder
+        run: |
+          mkdir samples/SingleProject/build
+          cd samples/SingleProject/build
+          cmake ..        
+
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo Hello, world!
