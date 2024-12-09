@@ -1,4 +1,4 @@
-#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_all.hpp>
 
 TEST_CASE( "vectors can be sized and resized", "[vector]" ) 
 {

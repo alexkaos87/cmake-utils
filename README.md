@@ -25,6 +25,6 @@ In general, if you want to compile a program using _cmake_, you must do the foll
 - `make static-check` will run cppcheck on src folder and log output on bin folder
 - `make doc` will generate doxygen documentation on bin folder
 - `make test` will compile and run whole tests suites (Boost, Catch2, gtest)
-- `make run-test-boost` will compile and run tests using Boost Tests Framework
-- `make run-test-catch2` will compile and run tests using Catch2 Framework
-- `make run-test-gtest` will compile and run tests using Google Test Framework
+- `make test-boost` will compile and run tests using Boost Tests Framework
+- `make test-catch2` will compile and run tests using Catch2 Framework
+- `make test-gtest` will compile and run tests using Google Test Framework
