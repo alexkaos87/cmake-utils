@@ -90,12 +90,12 @@ add_custom_target(
 
 ######################### TESTS SECTION ####àà################### 
 add_subdirectory(test_boost)
-#add_subdirectory(test_catch2)
+add_subdirectory(test_catch2)
 add_subdirectory(test_gtest)
 
 add_custom_target(
     test
-    COMMAND make test-boost test-gtest #test_catch2
+    COMMAND make test-boost test_catch2 test-gtest
     COMMENT "Running whole tests suites"
 )
 ################################################################# 
