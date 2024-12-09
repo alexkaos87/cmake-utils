@@ -26,7 +26,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true      # Inizializza i submodule
-          fetch-depth: 1        # Limita il fetch alla singola revisione necessaria
 
       # Install all dependencies needed for Single Project
       - name: Install dependencies
