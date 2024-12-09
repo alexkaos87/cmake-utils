@@ -1,8 +1,5 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Single Project CI
 
-# Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
@@ -13,7 +10,6 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
@@ -27,7 +23,6 @@ jobs:
         with:
           submodules: true      # Inizializza i submodule
 
-      # Install all dependencies needed for Single Project
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -43,6 +38,12 @@ jobs:
         run: |
           cd samples/SingleProject/build
           make build
+        
+      - name: Upload project binaries as artifact
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: bin
+          path: samples/SingleProject/build/bin
 
       - name: Run rebuild command
         run: |
@@ -58,11 +59,23 @@ jobs:
         run: |
           cd samples/SingleProject/build
           make static-check
+            
+      - name: Upload cppcheck.log as artifact
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: cppcheck-log
+          path: samples/SingleProject/bin/cppcheck.log
           
       - name: Run doxygen command
         run: |
           cd samples/SingleProject/build
           make doc
+        
+      - name: Upload documentation as artifact
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: doc
+          path: samples/SingleProject/build/doc
           
       - name: Run boost tests command
         run: |
@@ -70,17 +83,35 @@ jobs:
           make clean
           make test-boost
           
+      - name: Upload project boost tests as artifact
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: test-boost
+          path: samples/SingleProject/build/bin
+          
       - name: Run catch2 tests command
         run: |
           cd samples/SingleProject/build
           make clean
           make test-catch2
           
+      - name: Upload project catch2 tests as artifact
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: test-catch2
+          path: samples/SingleProject/build/bin
+          
       - name: Run gtest tests command
         run: |
           cd samples/SingleProject/build
           make clean
           make test-gtest
+          
+      - name: Upload project gtest tests as artifact
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: test-gtest
+          path: samples/SingleProject/build/bin
           
       - name: Run whole tests command
         run: |
