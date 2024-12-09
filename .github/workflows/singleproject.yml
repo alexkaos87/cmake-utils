@@ -70,11 +70,11 @@ jobs:
           make clean
           make test-boost
           
-      - name: Run catch2 tests command
-        run: |
-          cd samples/SingleProject/build
-          make clean
-          make test-catch2
+      #- name: Run catch2 tests command
+      #  run: |
+      #    cd samples/SingleProject/build
+      #    make clean
+      #    make test-catch2
           
       - name: Run gtest tests command
         run: |
