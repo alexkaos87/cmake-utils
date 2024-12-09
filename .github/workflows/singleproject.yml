@@ -25,6 +25,12 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
+      # Install all dependencies needed for Single Project
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential cppcheck catch2 libgtest-dev libgmock-dev libboost-all-dev doxygen graphviz
+
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo Hello, world!
