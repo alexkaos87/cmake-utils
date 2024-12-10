@@ -11,8 +11,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  # This workflow contains a single job called "build"
-  build:
+  compilation:
     # The type of runner that the job will run on
     runs-on: ubuntu-24.04
 
@@ -55,6 +54,28 @@ jobs:
           cd samples/SingleProject/build
           make clean
           
+  static-analysis:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-24.04
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          submodules: true      # Inizializza i submodule
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential cppcheck catch2 libgtest-dev libgmock-dev libboost-all-dev doxygen graphviz
+
+      - name: Prepare build folder
+        run: |
+          mkdir samples/SingleProject/build
+          cd samples/SingleProject/build
+          cmake ..   
+		  
       - name: Run cppcheck command
         run: |
           cd samples/SingleProject/build
@@ -66,6 +87,28 @@ jobs:
           name: cppcheck-log
           path: samples/SingleProject/bin/cppcheck.log
           
+  documentation:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-24.04
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          submodules: true      # Inizializza i submodule
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential cppcheck catch2 libgtest-dev libgmock-dev libboost-all-dev doxygen graphviz
+
+      - name: Prepare build folder
+        run: |
+          mkdir samples/SingleProject/build
+          cd samples/SingleProject/build
+          cmake ..   
+		  
       - name: Run doxygen command
         run: |
           cd samples/SingleProject/build
@@ -76,7 +119,30 @@ jobs:
         with:
           name: doc
           path: samples/SingleProject/bin/docs
-          
+           
+  boost-tests:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-24.04
+	needs: compilation
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          submodules: true      # Inizializza i submodule
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential cppcheck catch2 libgtest-dev libgmock-dev libboost-all-dev doxygen graphviz
+
+      - name: Prepare build folder
+        run: |
+          mkdir samples/SingleProject/build
+          cd samples/SingleProject/build
+          cmake ..   
+		  
       - name: Run boost tests command
         run: |
           cd samples/SingleProject/build
@@ -88,7 +154,30 @@ jobs:
         with:
           name: test-boost
           path: samples/SingleProject/bin
-          
+           
+  catch2-tests:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-24.04
+	needs: compilation
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          submodules: true      # Inizializza i submodule
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential cppcheck catch2 libgtest-dev libgmock-dev libboost-all-dev doxygen graphviz
+
+      - name: Prepare build folder
+        run: |
+          mkdir samples/SingleProject/build
+          cd samples/SingleProject/build
+          cmake ..   
+		  
       - name: Run catch2 tests command
         run: |
           cd samples/SingleProject/build
@@ -100,7 +189,30 @@ jobs:
         with:
           name: test-catch2
           path: samples/SingleProject/bin
-          
+           
+  google-tests:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-24.04
+	needs: compilation
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          submodules: true      # Inizializza i submodule
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential cppcheck catch2 libgtest-dev libgmock-dev libboost-all-dev doxygen graphviz
+
+      - name: Prepare build folder
+        run: |
+          mkdir samples/SingleProject/build
+          cd samples/SingleProject/build
+          cmake ..   
+		  
       - name: Run gtest tests command
         run: |
           cd samples/SingleProject/build
@@ -112,7 +224,30 @@ jobs:
         with:
           name: test-gtest
           path: samples/SingleProject/bin
-          
+           
+  all-tests:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-24.04
+	needs: compilation
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          submodules: true      # Inizializza i submodule
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential cppcheck catch2 libgtest-dev libgmock-dev libboost-all-dev doxygen graphviz
+
+      - name: Prepare build folder
+        run: |
+          mkdir samples/SingleProject/build
+          cd samples/SingleProject/build
+          cmake ..   
+		  
       - name: Run whole tests command
         run: |
           cd samples/SingleProject/build
