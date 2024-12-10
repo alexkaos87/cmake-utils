@@ -10,8 +10,12 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-definitions:
-  prepare-environment:
+jobs:
+  compilation:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-24.04
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
@@ -27,16 +31,7 @@ definitions:
         run: |
           mkdir samples/SingleProject/build
           cd samples/SingleProject/build
-          cmake ..     
-
-jobs:
-  compilation:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-24.04
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      - ${{ toJSON(definitions.prepare-environment) }}
+          cmake ..  
 
       - name: Run build command
         run: |
