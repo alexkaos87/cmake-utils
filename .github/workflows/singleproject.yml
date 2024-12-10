@@ -18,7 +18,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Checkout and Prepare
-        uses: ./.github/workflows/PrepareSingleProject
+        uses: ./.github/actions/PrepareSingleProject.yml
 
       - name: Run build command
         run: |
