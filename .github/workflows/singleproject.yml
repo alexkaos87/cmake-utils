@@ -176,3 +176,102 @@ jobs:
         with:
           name: test-boost
           path: samples/SingleProject/bin
+
+  catch2-tests:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-24.04
+    needs: [compilation, re-compilation]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          submodules: true      # Inizializza i submodule
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential cppcheck catch2 libgtest-dev libgmock-dev libboost-all-dev doxygen graphviz
+
+      - name: Prepare build folder
+        run: |
+          mkdir samples/SingleProject/build
+          cd samples/SingleProject/build
+          cmake ..  
+
+      - name: Run catch2 tests command
+        run: |
+          cd samples/SingleProject/build
+          make clean
+          make test-catch2
+
+      - name: Upload project catch2 tests as artifact
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: test-catch2
+          path: samples/SingleProject/bin
+
+  google-tests:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-24.04
+    needs: [compilation, re-compilation]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          submodules: true      # Inizializza i submodule
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential cppcheck catch2 libgtest-dev libgmock-dev libboost-all-dev doxygen graphviz
+
+      - name: Prepare build folder
+        run: |
+          mkdir samples/SingleProject/build
+          cd samples/SingleProject/build
+          cmake ..  
+
+      - name: Run gtest tests command
+        run: |
+          cd samples/SingleProject/build
+          make clean
+          make test-gtest
+
+      - name: Upload project gtest tests as artifact
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: test-gtest
+          path: samples/SingleProject/bin
+
+  all-tests:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-24.04
+    needs: [compilation, re-compilation]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          submodules: true      # Inizializza i submodule
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential cppcheck catch2 libgtest-dev libgmock-dev libboost-all-dev doxygen graphviz
+
+      - name: Prepare build folder
+        run: |
+          mkdir samples/SingleProject/build
+          cd samples/SingleProject/build
+          cmake ..  
+
+      - name: Run whole tests command
+        run: |
+          cd samples/SingleProject/build
+          make clean
+          make test
