@@ -1,4 +1,5 @@
 name: "Prepare Environment"
+
 description: "Checks out the repository, installs dependencies, and prepares the build folder"
 
 runs:
