@@ -86,3 +86,36 @@ jobs:
         with:
           name: cppcheck-log
           path: samples/SingleProject/bin/cppcheck.log
+
+  documentation:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-24.04
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          submodules: true      # Inizializza i submodule
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential cppcheck catch2 libgtest-dev libgmock-dev libboost-all-dev doxygen graphviz
+
+      - name: Prepare build folder
+        run: |
+          mkdir samples/SingleProject/build
+          cd samples/SingleProject/build
+          cmake ..  
+ 
+      - name: Run doxygen command
+        run: |
+          cd samples/SingleProject/build
+          make doc
+
+      - name: Upload documentation as artifact
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: doc
+          path: samples/SingleProject/bin/docs
