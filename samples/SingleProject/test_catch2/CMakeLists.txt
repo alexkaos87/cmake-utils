@@ -35,7 +35,7 @@ if(Catch2_FOUND)
     # Include directories
     target_include_directories(${PROJECT_NAME}Catch2Tests PUBLIC ${INCLUDE_FILES} "../src")
     # Include libraries
-    target_link_libraries(${PROJECT_NAME}Catch2Tests PRIVATE Catch2::Catch2WithMain gtest gmock GTest::gtest_main)
+    target_link_libraries(${PROJECT_NAME}Catch2Tests PRIVATE Catch2::Catch2WithMain gmock GTest::gmock_main)
     # Set output directory
     set_target_properties(${PROJECT_NAME}Catch2Tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../bin")
 
