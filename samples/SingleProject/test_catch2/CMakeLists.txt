@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
+set(CATCH2_TESTS_PROJECT ${PROJECT_NAME}Catch2Tests)
+
 # source folder files to be compiled
 set(SRC_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/../src")
 
@@ -31,19 +33,19 @@ if(Catch2_FOUND)
     find_package(GTest REQUIRED)
     
     # These tests can use the Catch2-provided main
-    add_executable(${PROJECT_NAME}Catch2Tests ${TEST_FILES} ${SRC_FILES} ${HEADER_FILES})
+    add_executable(${CATCH2_TESTS_PROJECT} ${TEST_FILES} ${SRC_FILES} ${HEADER_FILES})
     # Include directories
-    target_include_directories(${PROJECT_NAME}Catch2Tests PUBLIC ${INCLUDE_FILES} "../src")
+    target_include_directories(${CATCH2_TESTS_PROJECT} PUBLIC ${INCLUDE_FILES})
     # Include libraries
-    target_link_libraries(${PROJECT_NAME}Catch2Tests PRIVATE Catch2::Catch2WithMain gmock GTest::gmock_main)
+    target_link_libraries(${CATCH2_TESTS_PROJECT} PRIVATE Catch2::Catch2WithMain gmock GTest::gmock_main)
     # Set output directory
-    set_target_properties(${PROJECT_NAME}Catch2Tests PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../bin")
+    set_target_properties(${CATCH2_TESTS_PROJECT} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../bin")
 
     # adding custom tartget to execute tests 
     add_custom_target(
         test-catch2	
-        COMMAND make ${PROJECT_NAME}Catch2Tests
-        COMMAND ../../bin/${PROJECT_NAME}Catch2Tests
+        COMMAND make ${CATCH2_TESTS_PROJECT}
+        COMMAND ../../bin/${CATCH2_TESTS_PROJECT}
         COMMENT "Running catch2 Unit Tests"
     )
     
@@ -52,7 +54,7 @@ if(Catch2_FOUND)
         DIRECTORY
         APPEND PROPERTY
         ADDITIONAL_MAKE_CLEAN_FILES
-        ${CMAKE_CURRENT_SOURCE_DIR}/../bin/${PROJECT_NAME}Catch2Tests
+        ${CMAKE_CURRENT_SOURCE_DIR}/../bin/${CATCH2_TESTS_PROJECT}
     )
 else()
     message(STATUS "Catch2 not found, run unit tests disabled")

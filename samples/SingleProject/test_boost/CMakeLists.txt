@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
+set(BOOST_TESTS_PROJECT ${PROJECT_NAME}BoostTests)
+
 # source folder files to be compiled
 set(SRC_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/../src")
 
@@ -39,19 +41,19 @@ find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 if(Boost_FOUND)
     # These tests can use the Boost-provided main
-    add_executable(${PROJECT_NAME}BoostTests ${TEST_FILES} ${SRC_FILES} ${HEADER_FILES})
+    add_executable(${BOOST_TESTS_PROJECT} ${TEST_FILES} ${SRC_FILES} ${HEADER_FILES})
     # Include directories
-    target_include_directories(${PROJECT_NAME}BoostTests PUBLIC ${INCLUDE_FILES} "../src")
+    target_include_directories(${BOOST_TESTS_PROJECT} PUBLIC ${INCLUDE_FILES})
     # Include libraries
-    target_link_libraries(${PROJECT_NAME}BoostTests PRIVATE ${Boost_LIBRARIES})
+    target_link_libraries(${BOOST_TESTS_PROJECT} PRIVATE ${Boost_LIBRARIES})
     # Set output directory
-    set_target_properties(${PROJECT_NAME}BoostTests PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../bin")
+    set_target_properties(${BOOST_TESTS_PROJECT} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../bin")
 
     # adding custom tartget to execute tests 
     add_custom_target(
         test-boost
-        COMMAND make ${PROJECT_NAME}BoostTests
-        COMMAND ../../bin/${PROJECT_NAME}BoostTests
+        COMMAND make ${BOOST_TESTS_PROJECT}
+        COMMAND ../../bin/${BOOST_TESTS_PROJECT}
         COMMENT "Running Boost Unit Tests"
     )
     
@@ -60,7 +62,7 @@ if(Boost_FOUND)
         DIRECTORY
         APPEND PROPERTY
         ADDITIONAL_MAKE_CLEAN_FILES
-        ${CMAKE_CURRENT_SOURCE_DIR}/../bin/${PROJECT_NAME}BoostTests
+        ${CMAKE_CURRENT_SOURCE_DIR}/../bin/${BOOST_TESTS_PROJECT}
     )
 else()
     message(STATUS "Boost not found, run unit tests disabled")
