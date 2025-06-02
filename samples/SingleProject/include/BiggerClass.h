@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 class BiggerClass
 {
 public:
@@ -7,4 +9,5 @@ public:
     ~BiggerClass();
 
     unsigned CalculateFactorial(unsigned number) const;
+    std::string CalculateOwner(const std::string& numbers) const;
 };

@@ -56,6 +56,14 @@ if(Boost_FOUND)
         COMMAND ../../bin/${BOOST_TESTS_PROJECT}
         COMMENT "Running Boost Unit Tests"
     )
+
+    # adding custom tartget to execute tests 
+    add_custom_target(
+        test-boost-d
+        COMMAND make ${BOOST_TESTS_PROJECT}
+        COMMAND ../../bin/${BOOST_TESTS_PROJECT} --report_level=detailed
+        COMMENT "Running Boost Unit Tests"
+    )
     
     # Set boost tests cleaning files
     set_property(
